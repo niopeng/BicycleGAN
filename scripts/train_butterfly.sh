@@ -33,5 +33,5 @@ python ./train.py \
   --niter ${NITER} \
   --niter_decay ${NITER_DECAY} \
   --save_epoch_freq ${SAVE_EPOCH} \
-  --use_dropout
+  --use_dropout \
   --gpu_ids ${GPU_ID}
