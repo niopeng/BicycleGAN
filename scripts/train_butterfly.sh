@@ -13,7 +13,7 @@ NITER_DECAY=400
 SAVE_EPOCH=5
 
 # training
-GPU_ID=0
+GPU_ID=2
 DISPLAY_ID=$((GPU_ID*1+1))
 CHECKPOINTS_DIR=../checkpoints/${CLASS}/
 NAME=${CLASS}_${MODEL}
@@ -34,3 +34,4 @@ python ./train.py \
   --niter_decay ${NITER_DECAY} \
   --save_epoch_freq ${SAVE_EPOCH} \
   --use_dropout
+  --gpu_ids ${GPU_ID}

@@ -1,0 +1,15 @@
+python ./train.py \
+  --display_id 0 \
+  --dataroot ./datasets/n02279972_BGAN \
+  --name n02279972_BGAN \
+  --model bicycle_gan \
+  --direction BtoA \
+  --checkpoints_dir ../checkpoints/n02279972_BGAN/ \
+  --load_size 256 \
+  --crop_size 256 \
+  --nz 8 \
+  --input_nc 3 \
+  --niter 400 \
+  --niter_decay 400 \
+  --save_epoch_freq 5 \
+  --use_dropout
