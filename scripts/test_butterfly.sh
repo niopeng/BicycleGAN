@@ -1,7 +1,8 @@
 set -ex
 # models
 RESULTS_DIR='./results/n02279972_BGAN'
-CHECKPOINTS_DIR='../checkpoints/n02279972_BGAN/n02279972_BGAN_bicycle_gan/'
+#CHECKPOINTS_DIR='../checkpoints/n02279972_BGAN/n02279972_BGAN_bicycle_gan/'
+CHECKPOINTS_DIR='./pretrained_models/'
 
 # dataset
 CLASS='n02279972_BGAN'
