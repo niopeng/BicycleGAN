@@ -13,10 +13,14 @@ NITER_DECAY=400
 SAVE_EPOCH=5
 
 # training
-GPU_ID=2
+GPU_ID=1
 DISPLAY_ID=$((GPU_ID*1+1))
 CHECKPOINTS_DIR=./checkpoints/${CLASS}/
 NAME=${CLASS}_${MODEL}
+NET_D=../checkpoints/${CLASS}/n02279972_BGAN_bicycle_gan/695_net_D.pth
+NET_D2=../checkpoints/${CLASS}/n02279972_BGAN_bicycle_gan/695_net_D2.pth
+NET_G=../checkpoints/${CLASS}/n02279972_BGAN_bicycle_gan/695_net_G.pth
+NET_E=../checkpoints/${CLASS}/n02279972_BGAN_bicycle_gan/695_net_E.pth
 
 # command
 python ./train.py \
@@ -34,4 +38,8 @@ python ./train.py \
   --niter_decay ${NITER_DECAY} \
   --save_epoch_freq ${SAVE_EPOCH} \
   --use_dropout \
-  --gpu_ids ${GPU_ID}
+  --gpu_ids ${GPU_ID} \
+  --netD ${NET_D} \
+  --netD2 ${NET_D2} \
+  --netE ${NET_E} \
+  --netG ${NET_G}
