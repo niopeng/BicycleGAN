@@ -26,7 +26,7 @@ OPT=./train_srim_cicada_x8.json
 G_NET='IMRRDB_net'
 
 # command
-python ./train.py \
+python ./train_rrdb.py \
   --display_id ${DISPLAY_ID} \
   --dataroot ./datasets/${CLASS} \
   --name ${NAME} \
