@@ -3,6 +3,7 @@ import torch.nn as nn
 from torch.nn import init
 import functools
 from torch.optim import lr_scheduler
+import block as B
 
 ###############################################################################
 # Helper functions
@@ -138,6 +139,13 @@ def define_G(input_nc, output_nc, nz, ngf, netG='unet_128', norm='batch', nl='re
     elif netG == 'unet_256' and where_add == 'all':
         net = G_Unet_add_all(input_nc, output_nc, nz, 8, ngf, norm_layer=norm_layer, nl_layer=nl_layer,
                              use_dropout=use_dropout, upsample=upsample)
+    elif netG == 'IMRRDB_net':  # RRDB
+        net = IMRRDBNet(in_nc=input_nc, in_code_nc=nz, out_nc=output_nc, nf=64,
+            nb=24, gc=32, upscale=8, norm_type=None,
+            act_type='leakyrelu', mode="CNA", upsample_mode='upconv',
+            upsample_kernel_mode=upsample, no_conv=False, use_sigmoid=False,
+            last_act='tanh')
+
     else:
         raise NotImplementedError('Generator model name [%s] is not recognized' % net)
 
@@ -682,6 +690,54 @@ class G_Unet_add_all(nn.Module):
 
     def forward(self, x, z):
         return self.model(x, z)
+
+
+class IMRRDBNet(nn.Module):
+    def __init__(self, in_nc, in_code_nc, out_nc, nf, nb, gc=32, upscale=4, norm_type=None, \
+            act_type='leakyrelu', mode='CNA', upsample_mode='upconv',
+                 upsample_kernel_mode="nearest", no_conv=False, use_sigmoid=False, last_act=None):
+        super(IMRRDBNet, self).__init__()
+        n_upscale = int(math.log(upscale, 2))
+
+        fea_conv = B.conv_block(in_nc + in_code_nc, nf, kernel_size=3, norm_type=None, act_type=None)
+        rb_blocks = [B.RRDB(nf, kernel_size=3, gc=gc, stride=1, bias=True, pad_type='zero', \
+            norm_type=norm_type, act_type=act_type, mode='CNA') for _ in range(nb)]
+        LR_conv = B.conv_block(nf, nf, kernel_size=3, norm_type=norm_type, act_type=None, mode=mode)
+
+        if upsample_mode == 'upconv':
+            upsample_block = B.upconv_blcok
+        elif upsample_mode == 'pixelshuffle':
+            upsample_block = B.pixelshuffle_block
+        else:
+            raise NotImplementedError('upsample mode [{:s}] is not found'.format(upsample_mode))
+        if no_conv:
+            upsampler = [nn.Upsample(scale_factor=upscale, mode=upsample_kernel_mode)]
+        else:
+            upsampler = [upsample_block(nf, nf, act_type=act_type, mode=upsample_kernel_mode) for _ in
+                         range(n_upscale)]
+
+        HR_conv0 = B.conv_block(nf, nf, kernel_size=3, norm_type=None, act_type=act_type)
+
+        if use_sigmoid:
+            HR_conv1 = B.conv_block(nf, out_nc, kernel_size=3, norm_type=None, act_type="sigmoid")
+        else:
+            HR_conv1 = B.conv_block(nf, out_nc, kernel_size=3, norm_type=None, act_type=last_act)
+
+        self.last_act = last_act
+
+        self.model = B.sequential(fea_conv, B.ShortcutBlock(B.sequential(*rb_blocks, LR_conv)), \
+                                  *upsampler, HR_conv0, HR_conv1)
+
+    def forward(self, x, z):
+        # x = torch.cat((img, code), dim=1)
+        z_img = z.view(z.size(0), z.size(1), 1, 1).expand(z.size(0), z.size(1), x.size(2), x.size(3))
+        x_and_z = torch.cat([x, z_img], 1)
+        result = self.model(x_and_z)
+        if self.last_act == "tanh":
+            new_result = result + 1
+            new_result /= 2.
+            result = new_result
+        return result
 
 
 class UnetBlock_with_z(nn.Module):
