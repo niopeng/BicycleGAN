@@ -4,6 +4,7 @@ from torch.nn import init
 import functools
 from torch.optim import lr_scheduler
 from . import block as B
+import math
 
 ###############################################################################
 # Helper functions
