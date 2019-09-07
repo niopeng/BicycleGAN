@@ -62,7 +62,7 @@ class BaseOptions():
 
         # added params
 
-        parser.add_argument('--opt', type=str, help='Path to option JSON file.')
+        parser.add_argument('--opt', type=str, help='Path to option JSON file .')
 
         # parser.add_argument('--train_name', type=str, default='all',
         #                     help='name of train dataset')
