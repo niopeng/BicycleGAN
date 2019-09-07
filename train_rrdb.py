@@ -53,7 +53,7 @@ if __name__ == '__main__':
             num_day = int(data_opt['train']['num_day'])
         elif phase == 'val':
             val_dataset_opt = dataset_opt
-            val_set = create_dataset(dataset_opt)
+            val_set = _create_dataset(dataset_opt)
             val_loader = create_dataloader(val_set, dataset_opt)
             print('Number of val images in [{:s}]: {:d}'.format(dataset_opt['name'], len(val_set)))
         else:
