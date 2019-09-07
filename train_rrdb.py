@@ -29,7 +29,7 @@ if __name__ == '__main__':
 
     # options
     parser = argparse.ArgumentParser()
-    parser.add_argument('-opt', type=str, required=True, help='Path to option JSON file.')
+    parser.add_argument('--opt', type=str, required=True, help='Path to option JSON file.')
     data_opt = option.parse(parser.parse_args().opt, is_train=True)
 
     option.save(data_opt)
