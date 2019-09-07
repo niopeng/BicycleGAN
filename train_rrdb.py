@@ -30,7 +30,7 @@ if __name__ == '__main__':
     # options
     parser = argparse.ArgumentParser()
     parser.add_argument('--opt', type=str, help='Path to option JSON file.')
-    data_opt = option.parse(parser.parse_args().opt, is_train=True)
+    data_opt = option.parse(parser.parse_known_args().opt, is_train=True)
 
     option.save(data_opt)
     data_opt = option.dict_to_nonedict(data_opt)  # Convert to NoneDict, which return None for missing key.
