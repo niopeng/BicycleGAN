@@ -1,7 +1,7 @@
 set -ex
 MODEL='bicycle_gan'
 # dataset details
-CLASS='n02256656_BGAN_x8'  # facades, day2night, edges2shoes, edges2handbags, maps
+CLASS='Cicada_RRDB_BGAN_x8'  # facades, day2night, edges2shoes, edges2handbags, maps
 NZ=5
 NO_FLIP='--no_flip'
 DIRECTION='AtoB'
