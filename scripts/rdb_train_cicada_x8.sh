@@ -44,4 +44,5 @@ python ./train_rrdb.py \
   --gpu_ids ${GPU_ID} \
   --lr 0.0001 \
   --opt ${OPT} \
-  --netG ${G_NET}
+  --netG ${G_NET} \
+  --upsample bilinear
