@@ -53,10 +53,12 @@ class BiCycleGANModel(BaseModel):
                 self.optimizers.append(self.optimizer_E)
 
             if use_D:
-                self.optimizer_D = torch.optim.Adam(self.netD.parameters(), lr=opt.lr, betas=(opt.beta1, 0.999))
+                # self.optimizer_D = torch.optim.Adam(self.netD.parameters(), lr=opt.lr, betas=(opt.beta1, 0.999))
+                self.optimizer_D = torch.optim.Adam(self.netD.parameters(), lr=opt.lr / 10, betas=(opt.beta1, 0.999))
                 self.optimizers.append(self.optimizer_D)
             if use_D2:
-                self.optimizer_D2 = torch.optim.Adam(self.netD2.parameters(), lr=opt.lr, betas=(opt.beta1, 0.999))
+                # self.optimizer_D2 = torch.optim.Adam(self.netD2.parameters(), lr=opt.lr, betas=(opt.beta1, 0.999))
+                self.optimizer_D2 = torch.optim.Adam(self.netD2.parameters(), lr=opt.lr / 10, betas=(opt.beta1, 0.999))
                 self.optimizers.append(self.optimizer_D2)
 
     def is_train(self):
