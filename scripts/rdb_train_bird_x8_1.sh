@@ -42,7 +42,7 @@ python ./train_rrdb.py \
   --save_epoch_freq ${SAVE_EPOCH} \
   --use_dropout \
   --gpu_ids ${GPU_ID} \
-  --lr 0.0002 \
+  --lr 0.00005 \
   --opt ${OPT} \
   --netG ${G_NET} \
   --upsample bilinear
