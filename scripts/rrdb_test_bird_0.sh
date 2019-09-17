@@ -6,7 +6,7 @@ RESULTS_DIR='./results/rrdb_test_bird_0'
 #CHECKPOINTS_DIR='./checkpoints/n01531178_BGAN_x8/'
 
 # dataset
-CLASS='Bird_RRDB_BGAN_x8_0'
+CLASS='Bird_RRDB_BGAN_x8_1'
 CHECKPOINTS_DIR='./checkpoints'
 NZ=5
 NO_FLIP='--no_flip'
