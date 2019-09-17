@@ -14,9 +14,6 @@ DIRECTION='AtoB'
 LOAD_SIZE=256
 CROP_SIZE=256
 INPUT_NC=3
-NITER=200
-NITER_DECAY=20
-SAVE_EPOCH=5
 NAME=${CLASS}_${MODEL}
 
 OPT=./train_bird_x8.json
@@ -29,7 +26,7 @@ NUM_SAMPLES=50 # number of samples per input images
 DISPLAY_ID=0
 
 # command
-CUDA_VISIBLE_DEVICES=${GPU_ID} python ./test_rrdb.py \
+python ./test_rrdb.py \
   --dataroot ./datasets/${CLASS} \
   --results_dir ${RESULTS_DIR} \
   --checkpoints_dir ./checkpoints/${CLASS} \
