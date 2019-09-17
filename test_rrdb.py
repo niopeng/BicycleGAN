@@ -193,15 +193,15 @@ def get_srim_results(root_path, ori_path, scale=8):
         img = cv2.imread(v)
         # down_img = downsample(img)
         down_img = downsample_scale(img, scale)
-        print(ori_path + base_name + ".JPEG")
+        # print(ori_path + base_name + ".JPEG")
         base_img = cv2.imread(ori_path + base_name + ".JPEG")
-        print(np.mean(base_img), np.mean(down_img))
+        # print(np.mean(base_img), np.mean(down_img))
         if len(base_img.shape) < 3:
             base_img = cv2.cvtColor(base_img, cv2.COLOR_GRAY2BGR)
         down_base = downsample_scale(base_img, scale)
         result[i] = np.sum(np.linalg.norm(down_img - down_base))
-        print(result[i], down_img.shape, down_base.shape)
-        print(a)
+        # print(result[i], down_img.shape, down_base.shape)
+        # print(a)
         add_dict(mapping, base_name, img)
     return result, mapping
 
