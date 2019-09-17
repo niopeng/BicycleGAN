@@ -317,85 +317,85 @@ if opt.sync:
 
 
 # ========== New version ===========
-total_var = 0
-
-root_path = "/home/nio/naboo/SRIM/results/RRDB_Code_69_x8_Bird/n01531178_test/*"
-ori_path = "/home/nio/naboo/data/n01531178_test/"
-
-# caffe_dists, caffe_mapping = get_caffe_results(root_path, ori_path)
+# total_var = 0
+#
+# root_path = "/home/nio/naboo/SRIM/results/RRDB_Code_69_x8_Bird/n01531178_test/*"
+# ori_path = "/home/nio/naboo/data/n01531178_test/"
+#
+# # caffe_dists, caffe_mapping = get_caffe_results(root_path, ori_path)
+# #
+# # caffe_mean = compute_mean(caffe_mapping)
+#
+#
+# caffe_dists, caffe_mapping = get_srim_results(root_path, ori_path, scale=8)
 #
 # caffe_mean = compute_mean(caffe_mapping)
-
-
-caffe_dists, caffe_mapping = get_srim_results(root_path, ori_path, scale=8)
-
-caffe_mean = compute_mean(caffe_mapping)
-
-
-print("SRIM dist max: %f, min: %f, std: %f" % (caffe_dists.max(), caffe_dists.min(), np.std(caffe_dists)))
-
-gen_samples = np.empty((opt.num_test * opt.n_samples, 3, 256, 256))
-
-databank = {}
-bgan_dist_bank = {}
-mean_bgan = {}
-
-bgan_dists = np.empty((opt.num_test * opt.n_samples))
-# first stage
-for i, data in enumerate(islice(test_loader, opt.num_test)):
-    model.set_input(data)
-    print('process input image %3.3d/%3.3d' % (i, opt.num_test))
-    if not opt.sync:
-        z_samples = model.get_z_random(opt.n_samples + 1, opt.nz)
-
-    cur_all_data = np.empty((opt.n_samples, 3, 256, 256))
-    for nn in range(opt.n_samples):
-        real_A, fake_B, real_B = model.test(z_samples[[nn]], encode=False)
-        # print(real_A.size(), fake_B.size())
-        # print(np.transpose(torch.reshape(real_A, real_A.size()[1:]), [2, 0, 1]))
-        real_A = torch.reshape(real_A, real_A.size()[1:]).cpu().numpy()
-        fake_B = torch.reshape(fake_B, fake_B.size()[1:]).cpu().numpy()
-        real_A = (real_A + 1.) * 255. / 2
-        fake_B = (fake_B + 1.) * 255. / 2
-        add_dict(databank, data["A_paths"][0], fake_B)
-        cur_all_data[nn] = fake_B
-        # print("-=-=-", real_A.shape, np.transpose(real_A, [1, 2, 0]).shape)
-
-        # down_a = downsample(np.transpose(real_A, [1, 2, 0]))
-        # down_b = downsample(np.transpose(fake_B, [1, 2, 0]))
-        # down_a = downsample_scale(np.transpose(real_A, [1, 2, 0]), scale=8)
-        down_a = np.transpose(real_A, [1, 2, 0])
-        down_b = downsample_scale(np.transpose(fake_B, [1, 2, 0]), scale=8)
-
-        # print("====", down_a.max(), down_a.min())
-        # print(down_a.max(), down_a.min())
-        # bgan_dists[i] = np.sum(np.linalg.norm(fake_B - real_A))
-        bgan_dists[(i*opt.n_samples + nn)] = np.sum(np.linalg.norm(down_a - down_b))
-        add_dict(bgan_dist_bank, data["A_paths"][0], bgan_dists[i])
-    mean_bgan[data["A_paths"][0]] = np.mean(cur_all_data, axis=0)
-
-print("BGAN dist max: %f, min: %f, std: %f" % (bgan_dists.max(), bgan_dists.min(), np.std(bgan_dists)))
-
-
-# compute sigma
-all_dists = np.concatenate((caffe_dists, bgan_dists))
-print(caffe_dists.shape, bgan_dists.shape, all_dists.shape)
-sigma = np.std(all_dists)
-
-
-print(all_dists.max(), all_dists.min(), sigma)
-
-# compute caffe score
-# caffe_score = get_caffe_weighted(root_path, caffe_dists, sigma, caffe_mean)
-caffe_score = get_srim_weighted(root_path, caffe_dists, sigma, caffe_mean)
-print("SRIM score: %f"%caffe_score)
-
-bgan_score = get_bgan_weighted(databank, bgan_dist_bank, sigma, mean_bgan) / (opt.num_test * opt.n_samples)
-print("BGAN score: %f"%bgan_score)
-
-webpage.save()
-
-print("======Totoal average variance: %f" % (total_var / opt.num_test))
+#
+#
+# print("SRIM dist max: %f, min: %f, std: %f" % (caffe_dists.max(), caffe_dists.min(), np.std(caffe_dists)))
+#
+# gen_samples = np.empty((opt.num_test * opt.n_samples, 3, 256, 256))
+#
+# databank = {}
+# bgan_dist_bank = {}
+# mean_bgan = {}
+#
+# bgan_dists = np.empty((opt.num_test * opt.n_samples))
+# # first stage
+# for i, data in enumerate(islice(test_loader, opt.num_test)):
+#     model.set_input(data)
+#     print('process input image %3.3d/%3.3d' % (i, opt.num_test))
+#     if not opt.sync:
+#         z_samples = model.get_z_random(opt.n_samples + 1, opt.nz)
+#
+#     cur_all_data = np.empty((opt.n_samples, 3, 256, 256))
+#     for nn in range(opt.n_samples):
+#         real_A, fake_B, real_B = model.test(z_samples[[nn]], encode=False)
+#         # print(real_A.size(), fake_B.size())
+#         # print(np.transpose(torch.reshape(real_A, real_A.size()[1:]), [2, 0, 1]))
+#         real_A = torch.reshape(real_A, real_A.size()[1:]).cpu().numpy()
+#         fake_B = torch.reshape(fake_B, fake_B.size()[1:]).cpu().numpy()
+#         real_A = (real_A + 1.) * 255. / 2
+#         fake_B = (fake_B + 1.) * 255. / 2
+#         add_dict(databank, data["A_paths"][0], fake_B)
+#         cur_all_data[nn] = fake_B
+#         # print("-=-=-", real_A.shape, np.transpose(real_A, [1, 2, 0]).shape)
+#
+#         # down_a = downsample(np.transpose(real_A, [1, 2, 0]))
+#         # down_b = downsample(np.transpose(fake_B, [1, 2, 0]))
+#         # down_a = downsample_scale(np.transpose(real_A, [1, 2, 0]), scale=8)
+#         down_a = np.transpose(real_A, [1, 2, 0])
+#         down_b = downsample_scale(np.transpose(fake_B, [1, 2, 0]), scale=8)
+#
+#         # print("====", down_a.max(), down_a.min())
+#         # print(down_a.max(), down_a.min())
+#         # bgan_dists[i] = np.sum(np.linalg.norm(fake_B - real_A))
+#         bgan_dists[(i*opt.n_samples + nn)] = np.sum(np.linalg.norm(down_a - down_b))
+#         add_dict(bgan_dist_bank, data["A_paths"][0], bgan_dists[i])
+#     mean_bgan[data["A_paths"][0]] = np.mean(cur_all_data, axis=0)
+#
+# print("BGAN dist max: %f, min: %f, std: %f" % (bgan_dists.max(), bgan_dists.min(), np.std(bgan_dists)))
+#
+#
+# # compute sigma
+# all_dists = np.concatenate((caffe_dists, bgan_dists))
+# print(caffe_dists.shape, bgan_dists.shape, all_dists.shape)
+# sigma = np.std(all_dists)
+#
+#
+# print(all_dists.max(), all_dists.min(), sigma)
+#
+# # compute caffe score
+# # caffe_score = get_caffe_weighted(root_path, caffe_dists, sigma, caffe_mean)
+# caffe_score = get_srim_weighted(root_path, caffe_dists, sigma, caffe_mean)
+# print("SRIM score: %f"%caffe_score)
+#
+# bgan_score = get_bgan_weighted(databank, bgan_dist_bank, sigma, mean_bgan) / (opt.num_test * opt.n_samples)
+# print("BGAN score: %f"%bgan_score)
+#
+# webpage.save()
+#
+# print("======Totoal average variance: %f" % (total_var / opt.num_test))
 
 
 
@@ -403,33 +403,33 @@ print("======Totoal average variance: %f" % (total_var / opt.num_test))
 # test stage
 # Original =================
 
-# for i, data in enumerate(islice(dataset, opt.num_test)):
-#     model.set_input(data)
-#     print('process input image %3.3d/%3.3d' % (i, opt.num_test))
-#     if not opt.sync:
-#         z_samples = model.get_z_random(opt.n_samples + 1, opt.nz)
-#     cur_imgs = np.empty((opt.n_samples, 3, 256, 256))
-#     for nn in range(opt.n_samples + 1):
-#         encode = nn == 0 and not opt.no_encode
-#         real_A, fake_B, real_B = model.test(z_samples[[nn]], encode=encode)
-#         if nn == 0:
-#             images = [real_A, real_B, fake_B]
-#             names = ['input', 'ground truth', 'encoded']
-#         else:
-#             images.append(fake_B)
-#             names.append('random_sample%2.2d' % nn)
-#
-#         # print(fake_B.shape)
-#         if nn > 0:
-#             cur_imgs[(nn-1):nn] = fake_B
-#
-#         # print(a)
-#     # cur_var = compute_var(cur_imgs)
-#     # total_var += cur_var
-#     # print("Current Var: %f" % cur_var)
-#
-#     img_path = 'input_%3.3d' % i
-#     save_images(webpage, images, names, img_path, aspect_ratio=opt.aspect_ratio, width=opt.crop_size)
-#
-# webpage.save()
+for i, data in enumerate(islice(test_loader, opt.num_test)):
+    model.set_input(data)
+    print('process input image %3.3d/%3.3d' % (i, opt.num_test))
+    if not opt.sync:
+        z_samples = model.get_z_random(opt.n_samples + 1, opt.nz)
+    cur_imgs = np.empty((opt.n_samples, 3, 256, 256))
+    for nn in range(opt.n_samples + 1):
+        encode = nn == 0 and not opt.no_encode
+        real_A, fake_B, real_B = model.test(z_samples[[nn]], encode=encode)
+        if nn == 0:
+            images = [real_A, real_B, fake_B]
+            names = ['input', 'ground truth', 'encoded']
+        else:
+            images.append(fake_B)
+            names.append('random_sample%2.2d' % nn)
+
+        # print(fake_B.shape)
+        if nn > 0:
+            cur_imgs[(nn-1):nn] = fake_B
+
+        # print(a)
+    # cur_var = compute_var(cur_imgs)
+    # total_var += cur_var
+    # print("Current Var: %f" % cur_var)
+
+    img_path = 'input_%3.3d' % i
+    save_images(webpage, images, names, img_path, aspect_ratio=opt.aspect_ratio, width=opt.crop_size)
+
+webpage.save()
 
