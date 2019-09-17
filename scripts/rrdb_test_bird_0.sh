@@ -23,7 +23,7 @@ OPT=./train_bird_x8.json
 G_NET='IMRRDB_net'
 
 # misc
-GPU_ID=3  # gpu id
+GPU_ID=0  # gpu id
 NUM_TEST=20 # number of input images duirng test
 NUM_SAMPLES=50 # number of samples per input images
 DISPLAY_ID=0
