@@ -29,7 +29,7 @@ NUM_SAMPLES=50 # number of samples per input images
 DISPLAY_ID=0
 
 # command
-CUDA_VISIBLE_DEVICES=${GPU_ID} python ./test.py \
+CUDA_VISIBLE_DEVICES=${GPU_ID} python ./test_rrdb.py \
   --dataroot ./datasets/${CLASS} \
   --results_dir ${RESULTS_DIR} \
   --checkpoints_dir ./checkpoints/${CLASS} \
