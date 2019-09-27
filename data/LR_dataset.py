@@ -34,7 +34,7 @@ class LRDataset(data.Dataset):
             img_LR = img_LR[:, :, [2, 1, 0]]
         img_LR = torch.from_numpy(np.ascontiguousarray(np.transpose(img_LR, (2, 0, 1)))).float()
 
-        return {'LR': img_LR, 'LR_path': LR_path}
+        return {'A': img_LR, 'A_paths': LR_path}
 
     def __len__(self):
         return len(self.paths_LR)
