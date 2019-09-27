@@ -14,13 +14,13 @@ from progress_bar import ProgressBar
 # configurations
 # img_folder = '/home/nio/local/hdd2/data/n01531178/*'  # glob matching pattern
 
-img_folder = '/home/nio/local/ssd1/data/imagenet/raw/n07745940/*'  # glob matching pattern
-lmdb_save_path = '/home/nio/local/ssd1/data/imagenet/n07745940.lmdb'  # must end with .lmdb
-down_lmdb_save_path = '/home/nio/local/ssd1/data/imagenet/n07745940_down_8.lmdb'
+# img_folder = '/home/nio/local/ssd1/data/imagenet/raw/n07745940/*'  # glob matching pattern
+# lmdb_save_path = '/home/nio/local/ssd1/data/imagenet/n07745940.lmdb'  # must end with .lmdb
+# down_lmdb_save_path = '/home/nio/local/ssd1/data/imagenet/n07745940_down_8.lmdb'
 #
-# img_folder = '/home/nio/local/ssd1/data/imagenet/raw/n02256656_test/*'  # glob matching pattern
-# lmdb_save_path = '/home/nio/local/ssd1/data/imagenet/raw/n02256656_test.lmdb'  # must end with .lmdb
-# down_lmdb_save_path = '/home/nio/local/ssd1/data/imagenet/n02256656_test_down_8.lmdb'
+img_folder = '/home/nio/local/ssd1/data/imagenet/raw/n07745940_test/*'  # glob matching pattern
+lmdb_save_path = '/home/nio/local/ssd1/data/imagenet/n07745940_test.lmdb'  # must end with .lmdb
+down_lmdb_save_path = '/home/nio/local/ssd1/data/imagenet/n07745940_test_down_8.lmdb'
 
 # down_lmdb_save_path = '/home/nio/local/hdd2/data/n01531178_down_4.lmdb'
 
