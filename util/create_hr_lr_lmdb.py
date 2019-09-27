@@ -9,7 +9,7 @@ import math
 import numpy as np
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils.progress_bar import ProgressBar
+from progress_bar import ProgressBar
 
 # configurations
 # img_folder = '/home/nio/local/hdd2/data/n01531178/*'  # glob matching pattern
